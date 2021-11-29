@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const modelSauce = mongoose.Schema({
+//schema de données pour SAUCE
+const sauceSchema = mongoose.Schema({
     name : {type: String, required: true },
     manufacturer : {type: String, required: true },
     description : {type: String, required: true },
@@ -12,3 +13,5 @@ const modelSauce = mongoose.Schema({
     // usersLiked : {[ "String <userId>" ]},
     // usersDisliked : {[ "String <userId>" ]},
 });
+
+module.exports = mongoose.model('Sauce', sauceSchema);
