@@ -1,8 +1,9 @@
 const express = require('express');
-const { route } = require('../app');
+// const { route } = require('../app');
 const router = express.Router();
 
 const sauceCtrl = require('../controllers/sauces');
+const auth = require('../middlewares/auth');
 
 //afficher les sauces test
 router.use('/', (req, res, next) => {
@@ -25,10 +26,10 @@ router.use('/', (req, res, next) => {
     ];
     res.status(200).json(sauces);
 });
-router.post('/', sauceCtrl.createSauce);
-router.get('/', sauceCtrl.getAllSauces);
-router.get('/:id', sauceCtrl.getOneSauce);
-router.put('/:id', sauceCtrl.modifySauce);
-router.delete('/:id', sauceCtrl.deleteOneSauce);
+router.post('/', auth, sauceCtrl.createSauce);
+router.put('/:id', auth, sauceCtrl.modifySauce);
+router.delete('/:id', auth, sauceCtrl.deleteOneSauce);
+router.get('/', auth, sauceCtrl.getAllSauces);
+router.get('/:id', auth, sauceCtrl.getOneSauce);
 
 module.exports = router;
