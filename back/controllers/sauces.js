@@ -6,7 +6,7 @@ exports.createSauce = (req, res, next) => { //post
     const sauce = new Sauce({
         ...req.body
     });
-    sauce.save() //méthode qui sauvegardel'objet dans la bdd et retourne une promesse
+    sauce.save() //méthode qui sauvegarde l'objet dans la bdd et retourne une promesse
         .then(() => res.status(201).json({
             message: 'Sauce enregistrée !'
         }))

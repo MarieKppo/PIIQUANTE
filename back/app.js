@@ -1,8 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+//importation des routes user et sauces
 const saucesRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user');
+
+//application d'express
+const app = express();
+
 //connexion BDD
 mongoose.connect('mongodb+srv://Marie-C:iohTi3s0zfkc9sDj@cluster0.xdms5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
   { useNewUrlParser: true,
@@ -10,7 +15,7 @@ mongoose.connect('mongodb+srv://Marie-C:iohTi3s0zfkc9sDj@cluster0.xdms5.mongodb.
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-const app = express();
+app.use(express.json());
 
 //CORS
 app.use((req, res, next) => {
