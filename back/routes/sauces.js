@@ -1,35 +1,40 @@
 const express = require('express');
-// const { route } = require('../app');
 const router = express.Router();
-
-const sauceCtrl = require('../controllers/sauces');
 const auth = require('../middlewares/auth');
+const sauceCtrl = require('../controllers/sauces');
+const multer = require('../middlewares/multer-config');
 
 //afficher les sauces test
-router.use('/', (req, res, next) => {
-    const sauces = [{
-            _id: 'oeihfzeoi',
-            title: 'Mon premier objet',
-            description: 'Les infos de mon premier objet',
-            imageUrl: 'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
-            price: 4900,
-            userId: 'qsomihvqios',
-        },
-        {
-            _id: 'oeihfzeomoihi',
-            title: 'Mon deuxième objet',
-            description: 'Les infos de mon deuxième objet',
-            imageUrl: 'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
-            price: 2900,
-            userId: 'qsomihvqios',
-        },
-    ];
-    res.status(200).json(sauces);
-});
-router.post('/', auth, sauceCtrl.createSauce);
-router.put('/:id', auth, sauceCtrl.modifySauce);
-router.delete('/:id', auth, sauceCtrl.deleteOneSauce);
+// router.use('/', (req, res, next) => {
+//     const sauces = [{
+//         name: "Sosskipik",
+//         manufacturer:"tibo",
+//         description:"miam",
+//         mainPepper:"l'amour", "imageUrl":"http://localhost:3000/images/53607344_2057942004287338_75546395972468736_n.jpg1638443948142.undefined",
+//         heat: 9,
+//         usersLiked: [],
+//         usersDisliked:[],
+//         _id: "61a8abacb08800898d60d25f"
+//         },
+//         {
+//             _id: 'oeihfzeomoihi',
+//             title: 'Mon deuxième objet',
+//             description: 'Les infos de mon deuxième objet',
+//             imageUrl: 'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
+//             price: 2900,
+//             userId: 'qsomihvqios',
+//         },
+//     ];
+//     res.status(200).json(sauces);
+// });
+
+router.post('/', auth, multer, sauceCtrl.createSauce);
 router.get('/', auth, sauceCtrl.getAllSauces);
 router.get('/:id', auth, sauceCtrl.getOneSauce);
+router.put('/:id', auth, multer, sauceCtrl.modifySauce);
+router.delete('/:id', auth, sauceCtrl.deleteOneSauce);
+router.post('/:id/like', auth, sauceCtrl.likeSauce);
+router.post('/:id/dislike', auth, sauceCtrl.dislikeSauce);
+
 
 module.exports = router;

@@ -2,11 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 //importation des routes user et sauces
-const saucesRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user');
+const saucesRoutes = require('./routes/sauces')
+const path = require('path');
 
-//application d'express
-const app = express();
+const app = express();//application d'express
 
 //connexion BDD
 mongoose.connect('mongodb+srv://Marie-C:iohTi3s0zfkc9sDj@cluster0.xdms5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
@@ -14,8 +14,6 @@ mongoose.connect('mongodb+srv://Marie-C:iohTi3s0zfkc9sDj@cluster0.xdms5.mongodb.
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
-
-app.use(express.json());
 
 //CORS
 app.use((req, res, next) => {
@@ -30,8 +28,9 @@ app.use((req, res, next) => {
 //     next();
 // }); 
 
-app.use('/api/sauces', saucesRoutes);
+app.use(express.json());
 app.use('/api/auth', userRoutes);
+app.use('/api/sauces', saucesRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 module.exports = app;
-
-
