@@ -13,7 +13,7 @@ exports.createSauce = (req, res, next) => { //post
         // usersLiked: [],
         // usersDisliked: []
     });
-    // console.log('sauce : ' + sauce)
+    // console.log('sauce url: ' + sauce.imageUrl);
     sauce.save() //méthode qui sauvegarde l'objet dans la bdd et retourne une promesse
         .then(() => res.status(201).json({
             message: 'Sauce enregistrée !'
