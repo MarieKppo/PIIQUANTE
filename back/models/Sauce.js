@@ -1,3 +1,4 @@
+//stocke le modèle pour les éléments sauce
 const mongoose = require('mongoose');
 
 //schema de données pour SAUCE

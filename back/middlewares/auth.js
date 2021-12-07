@@ -1,3 +1,4 @@
+//middleware d'authentification : vérifie les autorisations avant de permettre une action
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {

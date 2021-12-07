@@ -1,3 +1,4 @@
+//stocke le modèle pour les utilisateurs + unicité mail
 const mongoose = require('mongoose');
 
 const uniqueValidator = require('mongoose-unique-validator');

@@ -1,10 +1,11 @@
+//stocke les fonctions utilisateurs
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-//Création d'un compte utilisateur : vérification de l'unicité du mail + hachage du mdp
+//Création d'un compte utilisateur 
 exports.signup = (req, res, next) =>{
-    //hash du mot de passe = async
+    //hash du mot de passe
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({

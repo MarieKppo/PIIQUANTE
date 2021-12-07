@@ -1,3 +1,4 @@
+//multer pour la gestion des images : stockage, nom et extension
 const multer = require('multer');
 
 const MIME_TYPES = {

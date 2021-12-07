@@ -1,12 +1,13 @@
+//stocke la logique métier : les fonctions/méthodes
+
+//importation du modèle et du package fichier nécessaires aux méthodes/sauces
 const Sauce = require('../models/Sauce');
 const fs = require('fs'); //package node pour accéder aux opérations liées aux fichiers
-const { log } = require('console');
 
-//stocke la logique métier : les fonctions/actions
-
+//Création d'une sauce
 exports.createSauce = (req, res, next) => { //post 
     const sauceObject = JSON.parse(req.body.sauce);
-    console.log(JSON.parse(req.body.sauce));
+    // console.log(JSON.parse(req.body.sauce));
 
     const sauce = new Sauce({
         ...sauceObject,
@@ -16,7 +17,7 @@ exports.createSauce = (req, res, next) => { //post
         usersLiked: [],
         usersDisliked: [],
     });
-    console.log('sauce : ' + sauce);
+    // console.log('sauce : ' + sauce);
     sauce.save() //méthode qui sauvegarde l'objet dans la bdd et retourne une promesse
         .then(() => res.status(201).json({
             message: 'Sauce enregistrée !'
@@ -26,11 +27,11 @@ exports.createSauce = (req, res, next) => { //post
         }));
 };
 
+//Modification d'une sauce
 exports.modifySauce = (req, res, next) => {
-    // console.log('trouver le bouton modifier');
     const sauceObject = req.file ?
     {
-        ...JSON.parse(req.body.sauce), // si le fichier image existe on le récup et on le modifie
+        ...JSON.parse(req.body.sauce), // si le fichier image existe on le récup et on le modifie si besoin
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     }:{ ...req.body};
     Sauce.updateOne({
@@ -47,6 +48,7 @@ exports.modifySauce = (req, res, next) => {
         }));
 };
 
+//Supprimer une sauce
 exports.deleteOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id})
         .then(sauce => {
@@ -64,20 +66,10 @@ exports.deleteOneSauce = (req, res, next) => {
                     }
                 );
             })
-            // if(!sauce){
-            //     res.status(404).json({
-            //         error: new Error('Sauce non trouvée !')
-            //     });
-            // }
-            // if(sauce.userId !== req.auth.userId){
-            //     return res.status(401).json({
-            //         error : new Error ('Requête non autorisée !')
-            //     });
-            // }
         }).catch(error => res.status(500).json({error}));
 };
 
-//afficher une seule sauce
+//Afficher une seule sauce
 exports.getOneSauce =  (req, res, next) => {
     Sauce.findOne({
             _id: req.params.id
@@ -88,7 +80,7 @@ exports.getOneSauce =  (req, res, next) => {
         }));
 };
 
-//afficher le tableau de toutes les sauces indépendamment des utilisateurs qui les ont ajoutées
+//Afficher le tableau de toutes les sauces indépendamment des utilisateurs qui les ont ajoutées
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
         .then(sauces => res.status(200).json(sauces))
@@ -97,8 +89,8 @@ exports.getAllSauces = (req, res, next) => {
         }));
 };
 
+//Avis sur les sauces
 exports.likeSauce = (req, res, next) => {
-    // console.log('cette sauce devrait être likée');
     const like = req.body.like; // =1, 0 -1
     const idOfUser = req.body.userId;
     const choosenSauce = req.params.id;
@@ -110,7 +102,6 @@ exports.likeSauce = (req, res, next) => {
     // rechercher la choosenSauce puis modifier ses infos
     Sauce.findOne({_id: choosenSauce})
         .then(sauce => {
-            // console.log(sauce.name + ' likes = ' + sauce.usersLiked.length + ' et dislikes = '+ sauce.usersDisliked.length)
             // valeurs de la sauce à modifier = notation
             const newNotes = {
                 usersLiked: sauce.usersLiked,
@@ -121,39 +112,33 @@ exports.likeSauce = (req, res, next) => {
             switch (like) {
                 //en cas de pouce vers le bas like = -1 :
                 case -1:
-                    // console.log("l'utilisateur " + idOfUser + " n'aime pas");
                     newNotes.usersDisliked.push(idOfUser);
                     break;
                 //en cas de changement d'avis, double clic sur le même pouce, ou retrait d'un avis
-                //2 options : retirer un like ou retirer un disklike like = 0
                 case 0:
-                    // console.log("l'utilisateur " + idOfUser + " change d'avis");
                     // si on annule un like 
                     if(newNotes.usersLiked.includes(idOfUser)){
                         const index = newNotes.usersLiked.indexOf(idOfUser);
-                        // console.log(index)
                         newNotes.usersLiked.splice(index, 1);
-                    }else { // si on annule un dislike 
+                    }
+                    else { // si on annule un dislike 
                         const index = newNotes.usersDisliked.indexOf(idOfUser);
                         newNotes.usersDisliked.splice(index, 1);
                     }
                     break; 
                 // en cas de pouce vers le haut, like = 1
                 case 1:
-                    // console.log("l'utilisateur " + idOfUser + " aime");
                     newNotes.usersLiked.push(idOfUser);
                     break;
 
                 default:
                     break;
             }
-            //total des likes et dislikes après l'action = nombre d'userId dans chaque tableau
+            //total des likes et dislikes après l'action = nombre d'userId/idOfUser dans chaque tableau
             newNotes.likes = newNotes.usersLiked.length;
             newNotes.dislikes = newNotes.usersDisliked.length;
-            // console.log("nouvelles valeurs de notation : ");
-            // console.log(newNotes);
 
-            //mise à jour de ces valeurs dans la bdd : méthode update
+            //mise à jour de ces valeurs dans la bdd : utilisation de la méthode update
             Sauce.updateOne({_id: choosenSauce}, newNotes)
                 .then(() => res.status(200).json({ message: 'Sauce notée !' }))
                 .catch(error => res.status(400).json({ error }))
