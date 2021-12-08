@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
 
 //importation des routes user et sauces
@@ -23,12 +24,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use((req, res, next) => {
-//     console.log(`Réponse reçue.`);
-//     next();
-// }); 
-
 app.use(express.json());
+app.use(helmet());
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', saucesRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
